@@ -1,0 +1,168 @@
+/* src/pages/Login.css */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Page background (no strong color) */
+.login-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f6f6f6; /* light neutral */
+}
+
+/* Card */
+.login-card {
+  width: 520px;
+  max-width: 95vw;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 36px 40px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+}
+
+.login-title {
+  text-align: center;
+  margin: 0 0 26px;
+  font-size: 38px;
+  font-weight: 800;
+  color: #111;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.login-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 18px 0 10px;
+}
+
+/* Input wrapper (underline style removed -> box style) */
+.input-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+}
+
+/* Input */
+.input-wrap input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  padding: 14px 8px;
+  background: transparent;
+}
+
+/* Error border */
+.input-error {
+  border-color: red;
+}
+
+/* Error message in RED */
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin: 8px 0 0;
+  line-height: 1.3;
+}
+
+/* Keeps spacing when no error */
+.error-space {
+  height: 18px;
+}
+
+/* ✅ Password wrap + eye inside input */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 46px; /* space for eye */
+}
+
+/* Eye button inside the input */
+.eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Forgot password at right corner */
+.forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.link-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  padding: 0;
+}
+
+/* Login button (no gradient) */
+.login-btn {
+  margin-top: 18px;
+  border: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+  background: #000;
+}
+
+.login-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ✅ Signup section centered */
+.signup-only {
+  text-align: center;
+  margin-top: 22px;
+}
+
+.signup-textline {
+  margin: 0 0 10px;
+  font-size: 16px;
+  color: #111;
+}
+
+.signup-link {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 900;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: #111;
+}
