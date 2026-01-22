@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
+
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -40,9 +42,13 @@ const EyeOffIcon = () => (
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+
 
   const [touched, setTouched] = useState({ email: false, password: false });
   const [showPassword, setShowPassword] = useState(false);
+  
+
 
   const isEmailValid = emailRegex.test(email.trim());
   const isPasswordValid = passwordRegex.test(password);
@@ -123,8 +129,14 @@ export default function Login() {
 
 
           <div className="signup-only">
-  <p className="signup-textline">Don’t have an account?</p>
-  <button type="button" className="signup-link">SIGN UP</button>
+  <button
+  type="button"
+  className="signup-link"
+  onClick={() => navigate("/signup")}
+>
+  SIGN UP
+</button>
+
 </div>
 
         </form>
