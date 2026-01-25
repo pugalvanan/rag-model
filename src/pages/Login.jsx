@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
+import { auth, db } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -43,6 +47,9 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    
+const [firebaseError, setFirebaseError] = useState("");
+
 
 
   const [touched, setTouched] = useState({ email: false, password: false });
@@ -63,15 +70,38 @@ export default function Login() {
 
   const canSubmit = isEmailValid && isPasswordValid;
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    setTouched({ email: true, password: true });
+  const onSubmit = async (e) => {
+  e.preventDefault();
+  setTouched({ email: true, password: true });
+  setFirebaseError("");
 
-    if (!canSubmit) return;
+  if (!canSubmit) return;
 
-    
-    alert(`Login success (demo)\nEmail: ${email}`);
-  };
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
+
+    // Read role from Firestore
+    const snap = await getDoc(doc(db, "users", cred.user.uid));
+    const role = snap.exists() ? snap.data().role : "user";
+
+    // Navigate based on role
+    if (role === "admin") navigate("/admin-dashboard");
+    else navigate("/chat");
+  } catch (err) {
+    const code = err?.code || "";
+
+    if (code === "auth/user-not-found") {
+      setFirebaseError("No account found. Please sign up.");
+    } else if (code === "auth/wrong-password" || code === "auth/invalid-credential") {
+      setFirebaseError("Incorrect email or password.");
+    } else if (code === "auth/too-many-requests") {
+      setFirebaseError("Too many attempts. Try again later.");
+    } else {
+      setFirebaseError("Login failed. Please try again.");
+    }
+  }
+};
+
 
   return (
     <div className="login-bg">
@@ -122,6 +152,8 @@ export default function Login() {
               Forgot password?
             </button>
           </div>
+          {firebaseError ? <p className="error">{firebaseError}</p> : <div className="space" />}
+
 
           <button type="submit" className="login-btn" disabled={!canSubmit}>
             LOGIN

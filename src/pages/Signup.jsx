@@ -1,5 +1,9 @@
     import React, { useMemo, useState } from "react";
 import "./Signup.css";
+import { auth, db } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -23,6 +27,9 @@ const EyeOffIcon = () => (
 export default function Signup() {
   const [role, setRole] = useState("");   
   const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [firebaseError, setFirebaseError] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -55,21 +62,60 @@ export default function Signup() {
     return role && emailValid && passwordValid && confirmValid;
   }, [role, emailValid, passwordValid, confirmValid]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+ const onSubmit = async (e) => {
+  e.preventDefault();
 
-    setTouched({
-      role: true,
-      email: true,
-      password: true,
-      confirmPassword: true,
+  setTouched({
+    role: true,
+    email: true,
+    password: true,
+    confirmPassword: true,
+  });
+
+  setFirebaseError("");
+
+  if (!canSubmit) return;
+
+  try {
+    const cred = await createUserWithEmailAndPassword(
+      auth,
+      email.trim(),
+      password
+    );
+
+    await setDoc(doc(db, "users", cred.user.uid), {
+      email: email.trim(),
+      role, // "admin" or "user"
+      createdAt: serverTimestamp(),
     });
 
-    if (!canSubmit) return;
+    navigate("/login");
+  } catch (err) {
+    console.log("Firebase signup error:", err);
 
-   
-    alert(`Signup success (demo)\nRole: ${role}\nEmail: ${email}`);
-  };
+    const code = err?.code || "";
+    const msg = err?.message || "";
+
+    if (code === "auth/email-already-in-use") {
+      setFirebaseError("This email is already registered. Please login.");
+    } else if (code === "auth/invalid-email") {
+      setFirebaseError("Invalid email address.");
+    } else if (code === "auth/weak-password") {
+      setFirebaseError("Password is too weak. Please follow the rules.");
+    } else if (code === "auth/network-request-failed") {
+      setFirebaseError("Network error. Check your internet and try again.");
+    } else if (code === "auth/operation-not-allowed") {
+      setFirebaseError("Email/Password is not enabled in Firebase Console.");
+    } else if (code === "permission-denied") {
+      setFirebaseError("Firestore permission denied. Check Firestore Rules.");
+    } else {
+      // show real reason so you can fix fast
+      setFirebaseError(`Signup failed: ${code || msg}`);
+    }
+  }
+};
+
+
 
   return (
     <div className="signup-bg">
@@ -170,7 +216,9 @@ export default function Signup() {
   <div className="space" />
 )}
 
-          {confirmError ? <p className="error">{confirmError}</p> : <div className="space" />}
+          
+          {firebaseError ? <p className="error">{firebaseError}</p> : <div className="space" />}
+
 
           {/* SUBMIT */}
           <button className="signup-btn" type="submit" disabled={!canSubmit}>
