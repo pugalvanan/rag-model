@@ -1,3 +1,9 @@
+:root {
+  --primary-color: #FDA481;
+  --primary-dark: #f58c63;
+  --text-dark: #1f2937;
+  --bg-light: #fff7f2;
+}
 
 * { box-sizing: border-box; }
 body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
@@ -84,4 +90,14 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
   text-decoration: none;
   color: #222;
   font-weight: 600;
+}
+.hero h1,
+.welcome-title {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.hero p,
+.welcome-subtitle {
+  color: var(--text-dark);
 }

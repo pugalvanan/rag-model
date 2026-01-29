@@ -80,13 +80,14 @@ const [firebaseError, setFirebaseError] = useState("");
   try {
     const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
 
-    // Read role from Firestore
-    const snap = await getDoc(doc(db, "users", cred.user.uid));
-    const role = snap.exists() ? snap.data().role : "user";
+    
+const snap = await getDoc(doc(db, "users", cred.user.uid));
+const data = snap.exists() ? snap.data() : null;
+const role = data?.role || "user";
 
-    // Navigate based on role
-    if (role === "admin") navigate("/admin-dashboard");
-    else navigate("/chat");
+if (role === "admin") navigate("/admin-dashboard");
+else navigate("/chat");
+
   } catch (err) {
     const code = err?.code || "";
 

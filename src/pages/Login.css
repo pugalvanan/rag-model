@@ -1,168 +1,170 @@
-/* src/pages/Login.css */
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Page background (no strong color) */
+/* Page background */
 .login-bg {
   min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   padding: 24px;
-  background: #f6f6f6; /* light neutral */
+  background-color: var(--bg-light);
 }
 
-/* Card */
+/* Login card */
 .login-card {
   width: 520px;
   max-width: 95vw;
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 36px 40px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+  background: var(--card-bg);
+  border-radius: 18px;
+  padding: 36px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
+/* Title */
 .login-title {
   text-align: center;
-  margin: 0 0 26px;
-  font-size: 38px;
+  margin-bottom: 20px;
+  color: var(--primary);
+  font-size: 42px;
   font-weight: 800;
-  color: #111;
 }
 
+/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
+  gap: 8px; /* compact spacing */
 }
 
 /* Labels */
 .login-label {
-  font-size: 18px;
-  font-weight: 700;
-  color: #111;
-  margin: 18px 0 10px;
+  font-weight: 600;
+  margin-top: 4px;
+  margin-bottom: 2px;
 }
 
-/* Input wrapper (underline style removed -> box style) */
+/* Input wrapper */
 .input-wrap {
   display: flex;
   align-items: center;
-  position: relative;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-  padding: 0 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 0 10px;
   background: #fff;
 }
 
-/* Input */
+.input-wrap:focus-within {
+  border-color: var(--primary);
+}
+
+/* Inputs */
 .input-wrap input {
-  width: 100%;
+  flex: 1;
   border: none;
   outline: none;
-  font-size: 15px;
-  padding: 14px 8px;
+  padding: 12px 6px;
+  font-size: 16px;
   background: transparent;
 }
 
-/* Error border */
-.input-error {
-  border-color: red;
-}
-
-/* Error message in RED */
-.error-text {
-  color: red;
-  font-size: 13px;
-  margin: 8px 0 0;
-  line-height: 1.3;
-}
-
-/* Keeps spacing when no error */
-.error-space {
-  height: 18px;
-}
-
-/* ✅ Password wrap + eye inside input */
+/* Password wrapper */
 .password-wrap {
   position: relative;
 }
 
-.password-wrap input {
-  padding-right: 46px; /* space for eye */
-}
-
-/* Eye button inside the input */
+/* Eye button */
 .eye-btn {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Forgot password at right corner */
+/* Error states */
+.input-error {
+  border-color: var(--error);
+}
+
+.error-text {
+  color: var(--error);
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.error {
+  color: var(--error);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.error-space {
+  height: 10px;
+}
+
+.space {
+  height: 10px;
+}
+
+/* Forgot password */
 .forgot-row {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: 4px;
 }
 
 .link-btn {
+  background: none;
   border: none;
-  background: transparent;
+  color: var(--primary);
   cursor: pointer;
-  color: #333;
   font-size: 14px;
   padding: 0;
 }
 
-/* Login button (no gradient) */
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+/* Login button */
 .login-btn {
-  margin-top: 18px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  background: var(--primary);
+  color: white;
   border: none;
+  border-radius: 12px;
+  font-weight: 700;
   cursor: pointer;
-  padding: 14px 16px;
-  border-radius: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: #fff;
-  background: #000;
+  font-size: 16px;
+}
+
+.login-btn:hover {
+  background: var(--primary-dark);
 }
 
 .login-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-  opacity: 0.55;
 }
 
-/* ✅ Signup section centered */
+/* Signup link */
 .signup-only {
-  text-align: center;
-  margin-top: 22px;
-}
-
-.signup-textline {
-  margin: 0 0 10px;
-  font-size: 16px;
-  color: #111;
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
 }
 
 .signup-link {
+  background: none;
   border: none;
-  background: transparent;
+  color: var(--primary);
+  font-weight: 600;
   cursor: pointer;
-  font-weight: 900;
-  letter-spacing: 1px;
-  font-size: 16px;
-  color: #111;
+  font-size: 15px;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
 }

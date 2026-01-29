@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
+import ProtectedRoute from "./components/Protectedroute";
+import AdminRoute from "./components/Adminroute";
+import Chat from "./pages/Chat";
+import AdminDashboard from "./pages/Admindashboard";
 
 function Home() {
   return (
@@ -16,8 +20,11 @@ function Home() {
       </header>
 
       <main className="hero">
-        <h1>Welcome to the Chatbot</h1>
-        <p>Your secure AI-powered document assistant.</p>
+        <h1 className="welcome-title">Welcome to the Chatbot</h1>
+<p className="welcome-subtitle">
+  Your secure AI-powered document assistant.
+</p>
+
       </main>
     </div>
   );
@@ -30,6 +37,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/chat"element={<ProtectedRoute><Chat /></ProtectedRoute>}/>
+        <Route path="/admin-dashboard"element={<ProtectedRoute><AdminRoute><AdminDashboard /></AdminRoute></ProtectedRoute> }/>
       </Routes>
     </Router>
   );

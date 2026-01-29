@@ -1,0 +1,21 @@
+:root {
+  --primary: #FDA481;
+  --primary-dark: #f08a63;
+  --bg-light: #FFF7F2;
+  --card-bg: #ffffff;
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --border-light: #e5e7eb;
+  --error: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}

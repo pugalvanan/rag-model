@@ -89,7 +89,9 @@ export default function Signup() {
       createdAt: serverTimestamp(),
     });
 
-    navigate("/login");
+   if (role === "admin") navigate("/admin-dashboard");
+else navigate("/chat");
+
   } catch (err) {
     console.log("Firebase signup error:", err);
 
