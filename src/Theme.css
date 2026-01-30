@@ -1,11 +1,13 @@
 :root {
-  --primary: #FDA481;
-  --primary-dark: #f08a63;
-  --bg-light: #FFF7F2;
+  --primary: #7c3aed;
+  --primary-dark: #6d28d9;
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-light: #faf5ff;
+  --bg-accent: #ede9fe;
   --card-bg: #ffffff;
-  --text-dark: #1f2937;
+  --text-dark: #1e1b4b;
   --text-muted: #6b7280;
-  --border-light: #e5e7eb;
+  --border-light: #e2e8f0;
   --error: #dc2626;
 }
 

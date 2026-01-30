@@ -1,0 +1,183 @@
+/* Admin Profile – purple/blue theme, card layout */
+
+.ap-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.ap-loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.ap-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: ap-spin 0.8s linear infinite;
+}
+
+@keyframes ap-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ap-topbar {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: white;
+}
+
+.ap-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+.ap-content {
+  flex: 1;
+  padding: 18px;
+  overflow: auto;
+}
+
+.ap-message {
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ap-message--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.ap-message--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.ap-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.ap-field {
+  margin-bottom: 14px;
+}
+
+.ap-field:last-of-type {
+  margin-bottom: 0;
+}
+
+.ap-label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.ap-value {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.ap-form .ap-field {
+  margin-bottom: 14px;
+}
+
+.ap-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Edit Profile: purple #7C3AED */
+.ap-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.ap-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.ap-btn--edit {
+  background: #7C3AED;
+  color: white;
+  border-color: #7C3AED;
+  margin-top: 12px;
+}
+
+.ap-btn--edit:hover:not(:disabled) {
+  background: #6d28d9;
+  border-color: #6d28d9;
+}
+
+/* Save: purple */
+.ap-btn--save {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #7c3aed;
+}
+
+.ap-btn--save:hover:not(:disabled) {
+  opacity: 0.95;
+}
+
+/* Cancel: white with purple border */
+.ap-btn--cancel {
+  background: white;
+  color: #7c3aed;
+  border-color: #7c3aed;
+}
+
+.ap-btn--cancel:hover:not(:disabled) {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+/* Logout: red #DC2626 */
+.ap-btn--logout {
+  background: white;
+  color: #DC2626;
+  border-color: #DC2626;
+  width: 100%;
+}
+
+.ap-btn--logout:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.ap-btn--logout-confirm {
+  background: #DC2626 !important;
+  color: white !important;
+  border-color: #DC2626 !important;
+}
+
+.ap-btn--logout-confirm:hover {
+  background: #b91c1c !important;
+  border-color: #b91c1c !important;
+}

@@ -1,5 +1,6 @@
 .userMenu {
   position: relative;
+  flex-shrink: 0;
 }
 
 .userBtn {
@@ -7,14 +8,43 @@
   background: transparent;
   cursor: pointer;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .userAvatar {
   width: 44px;
   height: 44px;
-  border-radius: 999px;
+  border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(253, 164, 129, 0.7); /* theme border */
+  border: 2px solid rgba(124, 58, 237, 0.7);
+  display: block;
+  flex-shrink: 0;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.userAvatar:hover,
+.userBtn:hover .userAvatar {
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25);
+}
+
+.userAvatar--sized {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+/* Person icon (SVG) when usePersonIcon is true */
+.userMenu-personIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7C3AED;
+  transition: color 0.2s ease;
+}
+
+.userBtn:hover .userMenu-personIcon {
+  color: #5b21b6;
 }
 
 /* Dropdown menu */
@@ -33,7 +63,7 @@
 
 .dropdownTop {
   padding: 12px 12px;
-  background: #fff7f2;
+  background: #faf5ff;
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
@@ -53,7 +83,7 @@
 }
 
 .dropItem:hover {
-  background: rgba(253, 164, 129, 0.12);
+  background: rgba(124, 58, 237, 0.12);
 }
 
 .dropItem.danger {

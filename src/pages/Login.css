@@ -52,7 +52,7 @@
 }
 
 .input-wrap:focus-within {
-  border-color: var(--primary);
+  border-color: #7c3aed;
 }
 
 /* Inputs */
@@ -116,7 +116,7 @@
 .link-btn {
   background: none;
   border: none;
-  color: var(--primary);
+  color: #7c3aed;
   cursor: pointer;
   font-size: 14px;
   padding: 0;
@@ -131,7 +131,7 @@
   width: 100%;
   margin-top: 10px;
   padding: 14px;
-  background: var(--primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -141,7 +141,7 @@
 }
 
 .login-btn:hover {
-  background: var(--primary-dark);
+  background: #6d28d9;
 }
 
 .login-btn:disabled {
@@ -159,7 +159,7 @@
 .signup-link {
   background: none;
   border: none;
-  color: var(--primary);
+  color: #7c3aed;
   font-weight: 600;
   cursor: pointer;
   font-size: 15px;

@@ -21,7 +21,7 @@
 .signup-title {
   text-align: center;
   margin: 0 0 24px;
-  color: var(--primary);
+  color: #7c3aed;
   font-size: 44px;
   font-weight: 800;
 }
@@ -66,8 +66,8 @@
 }
 
 .role-pill.active {
-  border-color: var(--primary);
-  background: #fff1ea;
+  border-color: #7c3aed;
+  background: #faf5ff;
 }
 
 /* Normal input */
@@ -81,7 +81,7 @@
 }
 
 .input:focus {
-  border-color: var(--primary);
+  border-color: #7c3aed;
 }
 
 /* Password + eye icon wrapper */
@@ -96,7 +96,7 @@
 }
 
 .field:focus-within {
-  border-color: var(--primary);
+  border-color: #7c3aed;
 }
 
 .field-input {
@@ -135,7 +135,7 @@
   width: 100%;
   margin-top: 8px;
   padding: 14px;
-  background: var(--primary);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -145,7 +145,7 @@
 }
 
 .signup-btn:hover {
-  background: var(--primary-dark);
+  background: #6d28d9;
 }
 
 .signup-btn:disabled {

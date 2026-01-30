@@ -13,6 +13,7 @@ import {
 
 import { auth, db } from "../firebase";
 import UserMenu from "../components/UserMenu";
+import "../Chat.css";
 
 export default function Chat() {
   // ✅ role from Firestore: "admin" | "user"
@@ -157,11 +158,16 @@ export default function Chat() {
             </div>
           </div>
 
-          {/* ✅ Profile icon (Logout inside) */}
-          <UserMenu role={role} onManageAccess={onAdminManageAccess} />
+          {/* ✅ Profile icon (person SVG, same as admin dashboard) */}
+          <UserMenu
+            role={role}
+            onManageAccess={onAdminManageAccess}
+            usePersonIcon={true}
+            avatarSize={32}
+          />
         </div>
 
-        <button style={{ width: "100%", marginTop: 10 }} onClick={createThread}>
+        <button className="chat-new-chat-btn" onClick={createThread}>
           + New Chat
         </button>
 
@@ -221,22 +227,17 @@ export default function Chat() {
         </div>
 
         {/* INPUT */}
-        <div
-          style={{
-            padding: 14,
-            borderTop: "1px solid #ddd",
-            display: "flex",
-            gap: 8,
-          }}
-        >
+        <div className="chat-inputbar">
           <input
-            style={{ flex: 1, padding: 10 }}
+            className="chat-query-input"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Ask..."
             onKeyDown={(e) => (e.key === "Enter" ? onSend() : null)}
           />
-          <button onClick={onSend}>Send</button>
+          <button type="button" className="chat-send-btn" onClick={onSend}>
+            Send
+          </button>
         </div>
       </main>
     </div>

@@ -1,0 +1,336 @@
+/* Manage User Access – purple/blue theme, responsive table */
+
+.amu-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.amu-loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.amu-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: amu-spin 0.8s linear infinite;
+}
+
+@keyframes amu-spin {
+  to { transform: rotate(360deg); }
+}
+
+.amu-topbar {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: white;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.amu-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+.amu-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.amu-content {
+  flex: 1;
+  padding: 18px;
+  overflow: auto;
+}
+
+.amu-message {
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.amu-message--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.amu-message--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.amu-retry {
+  margin-left: 10px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #DC2626;
+  background: transparent;
+  color: #DC2626;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.amu-retry:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.amu-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.amu-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  outline: none;
+  font-size: 14px;
+}
+
+.amu-search:focus {
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+.amu-select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.amu-sort-order {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.amu-sort-order:hover {
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+.amu-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: white;
+  margin-bottom: 14px;
+}
+
+.amu-empty {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.amu-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.amu-table th,
+.amu-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.amu-table th {
+  background: #faf5ff;
+  font-weight: 800;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.amu-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.amu-table tbody tr:hover {
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.amu-table tbody tr.amu-row-you {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.amu-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.amu-badge--active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+}
+
+.amu-badge--blocked {
+  background: rgba(239, 68, 68, 0.15);
+  color: #DC2626;
+}
+
+.amu-badge--admin {
+  background: rgba(124, 58, 237, 0.15);
+  color: var(--primary);
+}
+
+.amu-badge--user {
+  background: rgba(0, 0, 0, 0.06);
+  color: #444;
+}
+
+.amu-badge-you {
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--primary);
+  color: white;
+}
+
+.amu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.amu-btn {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.amu-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.amu-btn--edit {
+  background: #7C3AED;
+  color: white;
+  border-color: #7C3AED;
+}
+
+.amu-btn--edit:hover:not(:disabled) {
+  background: #6d28d9;
+  border-color: #6d28d9;
+}
+
+.amu-btn--status {
+  background: #ea580c;
+  color: white;
+  border-color: #ea580c;
+}
+
+.amu-btn--status:hover:not(:disabled) {
+  background: #c2410c;
+  border-color: #c2410c;
+}
+
+.amu-btn--delete {
+  background: white;
+  color: #DC2626;
+  border-color: #DC2626;
+}
+
+.amu-btn--delete:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.amu-btn-delete-confirm {
+  background: #DC2626 !important;
+  color: white !important;
+  border-color: #DC2626 !important;
+}
+
+.amu-btn-delete-confirm:hover {
+  background: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+
+.amu-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.amu-total {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.amu-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.amu-page-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.amu-modal-error {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #DC2626;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .amu-table-wrap {
+    overflow-x: scroll;
+  }
+  .amu-table th,
+  .amu-table td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  .amu-actions {
+    flex-direction: column;
+  }
+}

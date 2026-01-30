@@ -6,6 +6,9 @@ import ProtectedRoute from "./components/Protectedroute";
 import AdminRoute from "./components/Adminroute";
 import Chat from "./pages/Chat";
 import AdminDashboard from "./pages/Admindashboard";
+import AdminCategories from "./pages/AdminCategories";
+import AdminProfile from "./pages/AdminProfile";
+import AdminManageUsers from "./pages/AdminManageUsers";
 
 function Home() {
   return (
@@ -39,6 +42,9 @@ export default function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/chat"element={<ProtectedRoute><Chat /></ProtectedRoute>}/>
         <Route path="/admin-dashboard"element={<ProtectedRoute><AdminRoute><AdminDashboard /></AdminRoute></ProtectedRoute> }/>
+        <Route path="/admin/categories" element={<ProtectedRoute><AdminRoute><AdminCategories /></AdminRoute></ProtectedRoute>} />
+        <Route path="/admin/profile" element={<ProtectedRoute><AdminRoute><AdminProfile /></AdminRoute></ProtectedRoute>} />
+        <Route path="/admin/manage-users" element={<ProtectedRoute><AdminRoute><AdminManageUsers /></AdminRoute></ProtectedRoute>} />
       </Routes>
     </Router>
   );
