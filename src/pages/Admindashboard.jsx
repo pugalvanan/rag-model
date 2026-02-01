@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 import { auth, db } from "../firebase";
 import UserMenu from "../components/UserMenu";
+import AdminApprovalBell from "../components/AdminApprovalBell";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -422,6 +423,7 @@ export default function AdminDashboard() {
           >
             Manage User Access
           </button>
+
         </div>
 
         <div className="ad-line" />
@@ -517,68 +519,71 @@ export default function AdminDashboard() {
       <main className="ad-main">
         <div className="ad-topbar">
           <div className="ad-topbar-title">Admin Chat</div>
-          <div className="ad-topbar-profile-wrap" ref={profileDropdownRef}>
-            <button
-              type="button"
-              className="ad-profile-trigger"
-              onClick={() => setProfileDropdownOpen((o) => !o)}
-              aria-label="User profile menu"
-              aria-expanded={profileDropdownOpen}
-              aria-haspopup="true"
-              id="ad-profile-trigger"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-person ad-profile-icon"
-                viewBox="0 0 16 16"
-                aria-hidden="true"
+          <div className="ad-topbar-right">
+            <AdminApprovalBell />
+            <div className="ad-topbar-profile-wrap" ref={profileDropdownRef}>
+              <button
+                type="button"
+                className="ad-profile-trigger"
+                onClick={() => setProfileDropdownOpen((o) => !o)}
+                aria-label="User profile menu"
+                aria-expanded={profileDropdownOpen}
+                aria-haspopup="true"
+                id="ad-profile-trigger"
               >
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-              </svg>
-            </button>
-            {profileDropdownOpen && (
-              <div
-                className="ad-profile-dropdown"
-                role="menu"
-                aria-labelledby="ad-profile-trigger"
-              >
-                <button
-                  type="button"
-                  className="ad-profile-dropdown-item"
-                  role="menuitem"
-                  onClick={() => { setProfileDropdownOpen(false); navigate("/admin/profile"); }}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-person ad-profile-icon"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
                 >
-                  Profile
-                </button>
-                <button
-                  type="button"
-                  className="ad-profile-dropdown-item"
-                  role="menuitem"
-                  onClick={() => setProfileDropdownOpen(false)}
+                  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                </svg>
+              </button>
+              {profileDropdownOpen && (
+                <div
+                  className="ad-profile-dropdown"
+                  role="menu"
+                  aria-labelledby="ad-profile-trigger"
                 >
-                  Settings
-                </button>
-                <button
-                  type="button"
-                  className="ad-profile-dropdown-item"
-                  role="menuitem"
-                  onClick={() => { setProfileDropdownOpen(false); navigate("/admin/categories"); }}
-                >
-                  Category
-                </button>
-                <button
-                  type="button"
-                  className="ad-profile-dropdown-item ad-profile-dropdown-item--danger"
-                  role="menuitem"
-                  onClick={handleHeaderLogout}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+                  <button
+                    type="button"
+                    className="ad-profile-dropdown-item"
+                    role="menuitem"
+                    onClick={() => { setProfileDropdownOpen(false); navigate("/admin/profile"); }}
+                  >
+                    Profile
+                  </button>
+                  <button
+                    type="button"
+                    className="ad-profile-dropdown-item"
+                    role="menuitem"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    Settings
+                  </button>
+                  <button
+                    type="button"
+                    className="ad-profile-dropdown-item"
+                    role="menuitem"
+                    onClick={() => { setProfileDropdownOpen(false); navigate("/admin/categories"); }}
+                  >
+                    Category
+                  </button>
+                  <button
+                    type="button"
+                    className="ad-profile-dropdown-item ad-profile-dropdown-item--danger"
+                    role="menuitem"
+                    onClick={handleHeaderLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

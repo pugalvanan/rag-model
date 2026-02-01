@@ -9,6 +9,8 @@ import AdminDashboard from "./pages/Admindashboard";
 import AdminCategories from "./pages/AdminCategories";
 import AdminProfile from "./pages/AdminProfile";
 import AdminManageUsers from "./pages/AdminManageUsers";
+import AdminApprovalsPage from "./pages/AdminApprovalsPage";
+import PendingAdminPage from "./pages/PendingAdminPage";
 
 function Home() {
   return (
@@ -45,6 +47,8 @@ export default function App() {
         <Route path="/admin/categories" element={<ProtectedRoute><AdminRoute><AdminCategories /></AdminRoute></ProtectedRoute>} />
         <Route path="/admin/profile" element={<ProtectedRoute><AdminRoute><AdminProfile /></AdminRoute></ProtectedRoute>} />
         <Route path="/admin/manage-users" element={<ProtectedRoute><AdminRoute><AdminManageUsers /></AdminRoute></ProtectedRoute>} />
+        <Route path="/admin/approvals" element={<ProtectedRoute><AdminRoute><AdminApprovalsPage /></AdminRoute></ProtectedRoute>} />
+        <Route path="/pending-admin" element={<ProtectedRoute><PendingAdminPage /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

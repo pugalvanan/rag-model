@@ -195,6 +195,13 @@
   color: #7c3aed;
 }
 
+.ad-topbar-right{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
 /* Profile icon (top-right) */
 .ad-topbar-profile-wrap{
   position: relative;
@@ -395,6 +402,7 @@
 .ad-btn.outline:hover {
   background: rgba(124, 58, 237, 0.10);
 }
+
 .modal-backdrop {
   position: fixed;
   inset: 0;

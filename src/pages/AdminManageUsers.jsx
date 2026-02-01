@@ -1,14 +1,19 @@
+/* eslint-disable import/first */
 import React, { useEffect, useState, useMemo } from "react";
 import {
   collection,
   getDocs,
   doc,
+  getDoc,
   updateDoc,
   deleteDoc,
+  addDoc,
+  query,
+  where,
+  writeBatch,
   serverTimestamp,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
 import { auth, db } from "../firebase";
 import UserMenu from "../components/UserMenu";
 import "./AdminDashboard.css";
@@ -49,7 +54,6 @@ export default function AdminManageUsers() {
   const [editName, setEditName] = useState("");
   const [editRole, setEditRole] = useState("user");
   const [saving, setSaving] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [actionError, setActionError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -201,15 +205,78 @@ export default function AdminManageUsers() {
     if (!deleteTarget) return;
     setSaving(true);
     setActionError("");
+    const userId = deleteTarget.id;
     try {
-      await deleteDoc(doc(db, "users", deleteTarget.id));
-      setUsers((prev) => prev.filter((u) => u.id !== deleteTarget.id));
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        setUsers((prev) => prev.filter((u) => u.id !== userId));
+        setActionError("User no longer exists.");
+        closeDeleteConfirm();
+        return;
+      }
+      const userData = userSnap.data();
+      const deletedUserEmail = userData.email || userData.name || userId;
+
+      const adminUid = auth.currentUser?.uid;
+      let adminEmail = "";
+      if (adminUid) {
+        const adminSnap = await getDoc(doc(db, "users", adminUid));
+        const adminData = adminSnap.exists() ? adminSnap.data() : {};
+        adminEmail = adminData.email || adminData.name || adminUid;
+      }
+
+      const refsToDelete = [userRef];
+
+      const q1 = query(collection(db, "admin_requests"), where("requesterId", "==", userId));
+      const snap1 = await getDocs(q1);
+      snap1.docs.forEach((d) => refsToDelete.push(d.ref));
+
+      const q2 = query(collection(db, "admin_requests"), where("userId", "==", userId));
+      const snap2 = await getDocs(q2);
+      snap2.docs.forEach((d) => refsToDelete.push(d.ref));
+
+      const q3 = query(collection(db, "notifications"), where("requesterId", "==", userId));
+      const snap3 = await getDocs(q3);
+      snap3.docs.forEach((d) => refsToDelete.push(d.ref));
+
+      const q4 = query(collection(db, "notifications"), where("referenceUserId", "==", userId));
+      const snap4 = await getDocs(q4);
+      snap4.docs.forEach((d) => refsToDelete.push(d.ref));
+
+      const q5 = query(
+        collection(db, "notifications"),
+        where("type", "==", "ADMIN_REQUEST"),
+        where("referenceId", "==", userId)
+      );
+      const snap5 = await getDocs(q5);
+      snap5.docs.forEach((d) => refsToDelete.push(d.ref));
+
+      const uniqueRefs = [...new Set(refsToDelete)];
+      const BATCH_SIZE = 500;
+      for (let i = 0; i < uniqueRefs.length; i += BATCH_SIZE) {
+        const batch = writeBatch(db);
+        uniqueRefs.slice(i, i + BATCH_SIZE).forEach((ref) => batch.delete(ref));
+        await batch.commit();
+      }
+
+      await addDoc(collection(db, "notifications"), {
+        type: "USER_DELETED",
+        message: `User ${deletedUserEmail} was deleted by ${adminEmail}`,
+        targetRole: "admin",
+        deletedUserId: userId,
+        deletedBy: adminUid,
+        createdAt: serverTimestamp(),
+      });
+
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
       setSuccessMessage("User removed successfully");
       setTimeout(() => setSuccessMessage(""), 4000);
       closeDeleteConfirm();
+      window.dispatchEvent(new CustomEvent("admin-pending-refresh"));
     } catch (e) {
-      console.error(e);
-      setActionError("Delete failed. Please try again.");
+      console.error("Delete user error:", e);
+      setActionError(e?.message ?? "Delete failed. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -408,7 +475,7 @@ export default function AdminManageUsers() {
       )}
 
       {/* Delete confirm */}
-      {showDeleteConfirm && deleteTarget && (
+      {deleteTarget && (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && closeDeleteConfirm()}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <h3>Delete User</h3>

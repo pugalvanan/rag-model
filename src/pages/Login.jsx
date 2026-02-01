@@ -84,8 +84,9 @@ const [firebaseError, setFirebaseError] = useState("");
 const snap = await getDoc(doc(db, "users", cred.user.uid));
 const data = snap.exists() ? snap.data() : null;
 const role = data?.role || "user";
+const status = data?.status || "active";
 
-if (role === "admin") navigate("/admin-dashboard");
+if (role === "admin" && status !== "pending_admin") navigate("/admin-dashboard");
 else navigate("/chat");
 
   } catch (err) {

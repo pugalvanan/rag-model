@@ -1,8 +1,8 @@
-    import React, { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./Signup.css";
 import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection, serverTimestamp, query, where, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -25,7 +25,8 @@ const EyeOffIcon = () => (
 );
 
 export default function Signup() {
-  const [role, setRole] = useState("");   
+  const [role, setRole] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const [firebaseError, setFirebaseError] = useState("");
@@ -83,15 +84,51 @@ export default function Signup() {
       password
     );
 
-    await setDoc(doc(db, "users", cred.user.uid), {
-      email: email.trim(),
-      role, // "admin" or "user"
+    const uid = cred.user.uid;
+    const emailTrimmed = email.trim();
+    const nameTrimmed = (name || "").trim();
+
+    if (role === "admin") {
+      const pendingQ = query(
+        collection(db, "admin_requests"),
+        where("requesterId", "==", uid),
+        where("status", "==", "pending")
+      );
+      const pendingSnap = await getDocs(pendingQ);
+      if (!pendingSnap.empty) {
+        setFirebaseError("You already have a pending admin request. Please wait for a decision.");
+        return;
+      }
+
+      await setDoc(doc(db, "users", uid), {
+        email: emailTrimmed,
+        name: nameTrimmed || null,
+        role: "user",
+        status: "pending_admin",
+        createdAt: serverTimestamp(),
+      });
+
+      await addDoc(collection(db, "admin_requests"), {
+        requesterId: uid,
+        requesterEmail: emailTrimmed,
+        requesterName: nameTrimmed || emailTrimmed || "—",
+        requestedAt: serverTimestamp(),
+        status: "pending",
+      });
+
+      navigate("/pending-admin", { replace: true });
+      return;
+    }
+
+    await setDoc(doc(db, "users", uid), {
+      email: emailTrimmed,
+      name: nameTrimmed || null,
+      role: "user",
+      status: "active",
       createdAt: serverTimestamp(),
     });
 
-   if (role === "admin") navigate("/admin-dashboard");
-else navigate("/chat");
-
+    navigate("/chat");
   } catch (err) {
     console.log("Firebase signup error:", err);
 
@@ -153,6 +190,17 @@ else navigate("/chat");
             </label>
           </div>
           {roleError ? <p className="error">{roleError}</p> : <div className="space" />}
+
+          {/* NAME (optional, useful for admin requests) */}
+          <label className="label">Name (optional)</label>
+          <input
+            className="input"
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <div className="space" />
 
           {/* EMAIL */}
           <label className="label">Email</label>
