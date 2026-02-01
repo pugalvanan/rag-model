@@ -106,24 +106,53 @@ export default function Chat() {
     setMessages(nextMsgs);
     setMessage("");
 
-    // 🔌 TODO: call your middleware backend with token + docId
-    const botMsg = {
-      role: "assistant",
-      text: "Demo reply (connect backend next).",
-      ts: Date.now(),
-    };
+    try {
+      // 🔌 Call Python RAG Backend
+      const response = await fetch("http://localhost:8000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: message.trim(),
+          thread_id: activeThreadId,
+          user_id: auth.currentUser?.uid,
+        }),
+      });
 
-    const finalMsgs = [...nextMsgs, botMsg];
-    setMessages(finalMsgs);
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
 
-    await setDoc(
-      doc(db, "threads", activeThreadId),
-      {
-        messages: finalMsgs,
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
+      const data = await response.json();
+
+      const botMsg = {
+        role: "assistant",
+        text: data.answer,
+        sources: data.sources || [],
+        ts: Date.now(),
+      };
+
+      const finalMsgs = [...nextMsgs, botMsg];
+      setMessages(finalMsgs);
+
+      await setDoc(
+        doc(db, "threads", activeThreadId),
+        {
+          messages: finalMsgs,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.error("Error calling RAG API:", err);
+      const errorMsg = {
+        role: "assistant",
+        text: `Error: ${err.message}. Make sure Python RAG server is running on port 8000.`,
+        ts: Date.now(),
+      };
+
+      const finalMsgs = [...nextMsgs, errorMsg];
+      setMessages(finalMsgs);
+    }
   };
 
   // ✅ Admin actions (placeholder UI)

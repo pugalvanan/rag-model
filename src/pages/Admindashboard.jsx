@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import UserMenu from "../components/UserMenu";
 import AdminApprovalBell from "../components/AdminApprovalBell";
+import { ingestDocument, queryRag } from "../api/ragApi";
 import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
@@ -50,6 +51,8 @@ export default function AdminDashboard() {
   const [queryDocName, setQueryDocName] = useState("");
   const [queryMessages, setQueryMessages] = useState([]);
   const [queryInput, setQueryInput] = useState("");
+  const [querying, setQuerying] = useState(false);
+  const [ragStatus, setRagStatus] = useState("");
 
   // header profile dropdown
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -181,9 +184,18 @@ export default function AdminDashboard() {
     );
   };
 
-  // ✅ MULTI-UPLOAD (Firestore metadata)
+  // RAG ingest: friendly error for 429
+  function ragUploadErrorMessage(err) {
+    const msg = err?.message || String(err);
+    if (/429|insufficient_quota|quota/i.test(msg))
+      return "OpenAI quota exceeded; using local embeddings or add billing.";
+    return msg || "Upload failed. Please try again.";
+  }
+
+  // ✅ MULTI-UPLOAD: RAG ingest + Firestore metadata
   const uploadDocument = async () => {
     setCategoryError("");
+    setRagStatus("");
     const categorySelected = selectedCategoryId?.trim() && selectedCategoryId !== "Select a category";
     if (!categorySelected) {
       setCategoryError("Please select the category");
@@ -203,6 +215,21 @@ export default function AdminDashboard() {
 
     try {
       setUploading(true);
+
+      // 1) RAG ingest – one request per file
+      let totalChunks = 0;
+      for (const f of files) {
+        try {
+          const data = await ingestDocument(f);
+          totalChunks += data.chunks_added ?? 0;
+        } catch (ragErr) {
+          setRagStatus(ragUploadErrorMessage(ragErr));
+          // Continue to Firestore so admin still has metadata
+        }
+      }
+      if (totalChunks > 0)
+        setRagStatus(`Uploaded successfully: chunks_added = ${totalChunks}`);
+      else if (!ragStatus) setRagStatus("Uploaded to RAG (0 chunks). Check file format (PDF/TXT).");
 
       const uploaded = [];
 
@@ -231,6 +258,7 @@ export default function AdminDashboard() {
       setShowDocPrompt(true);
     } catch (e) {
       console.error(e);
+      setRagStatus(ragUploadErrorMessage(e));
       alert("Upload failed. Please try again.");
     } finally {
       setUploading(false);
@@ -260,6 +288,7 @@ export default function AdminDashboard() {
   const handleCloseUploadModal = () => {
     setShowDocPrompt(false);
     setSuccessMessage("Document uploaded successfully");
+    setRagStatus("");
     setSelectedCategoryId("");
     setDocName("");
     setFiles([]);
@@ -289,21 +318,38 @@ export default function AdminDashboard() {
     setQueryInput("");
   };
 
-  // Send query in in-page chat (placeholder backend)
+  // Send query in in-page chat – calls RAG backend
   const onSendQuery = async () => {
-    if (!queryInput.trim() || !queryDocId) return;
+    const q = queryInput?.trim();
+    if (!q || querying) return;
 
-    const userMsg = { role: "user", text: queryInput.trim(), ts: Date.now() };
+    const userMsg = { role: "user", text: q, ts: Date.now() };
     setQueryMessages((prev) => [...prev, userMsg]);
     setQueryInput("");
+    setQuerying(true);
 
-    // TODO: call backend/AI with queryDocId and user query
-    const botMsg = {
-      role: "assistant",
-      text: "Demo reply (connect backend to process document queries).",
-      ts: Date.now(),
-    };
-    setQueryMessages((prev) => [...prev, botMsg]);
+    try {
+      const res = await queryRag(q, 4);
+      const botMsg = {
+        role: "assistant",
+        text: res.answer ?? "No answer.",
+        sources: res.sources ?? [],
+        used_llm: res.used_llm ?? false,
+        ts: Date.now(),
+      };
+      setQueryMessages((prev) => [...prev, botMsg]);
+    } catch (err) {
+      const botMsg = {
+        role: "assistant",
+        text: (err?.message || "Query failed. Is the RAG backend running?") + " Try again.",
+        sources: [],
+        used_llm: false,
+        ts: Date.now(),
+      };
+      setQueryMessages((prev) => [...prev, botMsg]);
+    } finally {
+      setQuerying(false);
+    }
   };
 
   // Clear query chat messages only
@@ -411,8 +457,13 @@ export default function AdminDashboard() {
             onClick={uploadDocument}
             disabled={uploading || categories.length === 0}
           >
-            {uploading ? "Uploading..." : "Upload"}
+            {uploading ? "Uploading…" : "Upload"}
           </button>
+          {ragStatus && (
+            <div className="ad-rag-status" role="status">
+              {ragStatus}
+            </div>
+          )}
 
           <div className="ad-line" />
 
@@ -482,6 +533,26 @@ export default function AdminDashboard() {
                 <div key={idx} className={`ad-query-msg ${m.role === "user" ? "ad-query-msg--user" : "ad-query-msg--bot"}`}>
                   <span className="ad-query-msg-role">{m.role === "user" ? "You" : "AI"}</span>
                   <div className="ad-query-msg-text">{m.text}</div>
+                  {m.role === "assistant" && (m.sources?.length > 0 || m.used_llm != null) && (
+                    <div className="ad-query-msg-meta">
+                      {m.used_llm != null && (
+                        <span className="ad-query-llm-badge" title={m.used_llm ? "Answer from LLM" : "Extractive answer"}>
+                          LLM: {m.used_llm ? "ON" : "OFF"}
+                        </span>
+                      )}
+                      {m.sources?.length > 0 && (
+                        <ul className="ad-query-sources">
+                          {m.sources.map((s, i) => (
+                            <li key={i} className="ad-query-source-item">
+                              <span className="ad-query-source-name">{s.source}</span>
+                              {s.page != null && <span className="ad-query-source-page"> p.{s.page}</span>}
+                              <div className="ad-query-source-snippet">{(s.snippet || "").slice(0, 200)}{(s.snippet || "").length > 200 ? "…" : ""}</div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -492,10 +563,16 @@ export default function AdminDashboard() {
                 value={queryInput}
                 onChange={(e) => setQueryInput(e.target.value)}
                 onKeyDown={(e) => (e.key === "Enter" ? onSendQuery() : null)}
+                disabled={querying}
                 aria-label="Query input"
               />
-              <button type="button" className="ad-query-send" onClick={onSendQuery}>
-                Send
+              <button
+                type="button"
+                className="ad-query-send"
+                onClick={onSendQuery}
+                disabled={querying || !queryInput?.trim()}
+              >
+                {querying ? "Thinking…" : "Send"}
               </button>
             </div>
           </div>

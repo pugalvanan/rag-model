@@ -5,7 +5,7 @@ import Signup from "./pages/Signup.jsx";
 import ProtectedRoute from "./components/Protectedroute";
 import AdminRoute from "./components/Adminroute";
 import Chat from "./pages/Chat";
-import AdminDashboard from "./pages/Admindashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import AdminCategories from "./pages/AdminCategories";
 import AdminProfile from "./pages/AdminProfile";
 import AdminManageUsers from "./pages/AdminManageUsers";
